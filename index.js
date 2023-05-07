@@ -5,7 +5,9 @@ import cors from 'cors';
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
-const MONGO_URL = "mongodb://127.0.0.1:27017"
+// const MONGO_URL = "mongodb://127.0.0.1:27017"
+const MONGO_URL = "mongodb+srv://alokkushwaha96300:Alok2000@cluster0.ztxbbuz.mongodb.net/ishop"
+
 
 const app = express();
 
@@ -66,7 +68,7 @@ app.get("/cart", async (req, res) => {
 
 })
 
-app.post("/mobiles", auth,async (req, res) => {
+app.post("/mobiles", async (req, res) => {
     const mobilesdata = req.body;
     const result = await client
         .db("ishop")
@@ -74,6 +76,7 @@ app.post("/mobiles", auth,async (req, res) => {
         .insertMany(mobilesdata);
     res.send(result)
 })
+
 
 app.put('/cart', async (req, res) => {
     const mobile = req.body;
