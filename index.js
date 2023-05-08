@@ -4,14 +4,18 @@ import { MongoClient } from 'mongodb';
 import cors from 'cors';
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
 
 // const MONGO_URL = "mongodb://127.0.0.1:27017"
 const MONGO_URL = "mongodb+srv://alokkushwaha96300:Alok2000@cluster0.ztxbbuz.mongodb.net/ishop"
 
 
 const app = express();
-
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 app.use(express.json())
+app.use(morgan('dev'))
 app.use(cors({
     origin: "*"
 }));
@@ -125,7 +129,10 @@ app.put('/cart', async (req, res) => {
 
 app.post('/signup', async (req,res)=>{
 
-    const {fname,lname,email,password} = req.body;
+    const {fname,lname,email,password} = req.body.body;
+    console.log(fname)
+    console.log(req.body)
+    console.log(password)
     
     const isUserExist = await client
     .db("ishop")
@@ -138,6 +145,8 @@ app.post('/signup', async (req,res)=>{
     }
     else{
         const hashpass = await bcrypt.hash(password, salt)
+        
+        console.log("inside else")
 
         const storedata = await client.db("ishop")
     .collection("signupdetail")
@@ -148,9 +157,9 @@ app.post('/signup', async (req,res)=>{
 
 } )
 
-app.get('/login', async (req,res)=>{
+app.post('/login', async (req,res)=>{
 
-    const {email,password} = req.body;
+    const {email,password} = req.body.body;
     
     const isUserExist = await client
     .db("ishop")
